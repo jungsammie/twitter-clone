@@ -2,6 +2,7 @@ import { dbService } from "firebaseConfig";
 import React, { useState } from "react";
 
 const Tweet = ({ tweetObj, isOwner }) => {
+  console.log(tweetObj.text);
   const [editing, setEditing] = useState(false); // checking editing mode or not
   const [newTweet, setNewTweet] = useState(tweetObj.text); // for updating text
   const onDeleteClick = async () => {
@@ -39,6 +40,7 @@ const Tweet = ({ tweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{tweetObj.text}</h4>
+          {tweetObj.attachmentUrl && <img src={tweetObj.attachmentUrl} width="50px" />}
           {isOwner && (
             <>
             <button onClick={onDeleteClick}>Delete</button>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { dbService } from "firebaseConfig";
+import { v4 as uuidv4 } from 'uuid';
+import { dbService, storageService } from "firebaseConfig";
 import Tweet from "components/Tweet";
 
 const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
   // const getTweets = async () => {
   //   const dbTweets = await dbService.collection("tweets").get();
   //   dbTweets.forEach(document => {
@@ -29,12 +30,21 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    let attachmentUrl = ""
+    if(attachment !== "") {
+      const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+      const response = await attachmentRef.putString(attachment, "data_url");
+      attachmentUrl = await response.ref.getDownloadURL();
+    } 
+
     await dbService.collection("tweets").add({
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
+      attachmentUrl: attachmentUrl
     });
     setTweet("");
+    setAttachment("");
   };
   const onChange = (event) => {
     const {
@@ -58,7 +68,7 @@ const Home = ({ userObj }) => {
     };
     reader.readAsDataURL(attachedImg);
   }
-const onClearPhoto = (event) => setAttachment(null);
+const onClearAttachment = (event) => setAttachment("");
 
   return (
     <div>
@@ -69,7 +79,7 @@ const onClearPhoto = (event) => setAttachment(null);
         {attachment && (
           <div>
             <img src={attachment} width="50px" />
-            <button onClick={onClearPhoto}>Clear</button>
+            <button onClick={onClearAttachment}>Clear</button>
           </div>)}
       </form>
       <div>
