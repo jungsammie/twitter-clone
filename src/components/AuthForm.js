@@ -22,10 +22,7 @@ const AuthFrom = () => {
     try {
       if (newAccount) {
         // create Account
-        await authService.createUserWithEmailAndPassword(
-          email,
-          password,
-        );
+        await authService.createUserWithEmailAndPassword(email, password);
       } else {
         // log in
         await authService.signInWithEmailAndPassword(email, password);
@@ -38,7 +35,7 @@ const AuthFrom = () => {
   const toggleAccount = () => setNewAccount((prev) => !prev);
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="container">
         <input
           name="email"
           type="text"
@@ -46,6 +43,7 @@ const AuthFrom = () => {
           required
           value={email}
           onChange={onChange}
+          className="authInput"
         />
         <input
           name="password"
@@ -54,13 +52,18 @@ const AuthFrom = () => {
           required
           value={password}
           onChange={onChange}
+          className="authInput"
         />
-        <input type="submit" value={newAccount ? 'Create Account' : 'Log In'} />
+        <input
+          type="submit"
+          value={newAccount ? 'Create Account' : 'Log In'}
+          className="authInput authSubmit"
+          />
+          {error && <span className="authError">{error}</span>}
       </form>
-      <span onClick={toggleAccount}>
+      <span onClick={toggleAccount} className="authSwitch">
         {newAccount ? 'Sign in' : 'Create Account'}
       </span>
-      {error}
     </>
   );
 };
