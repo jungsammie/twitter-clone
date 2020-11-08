@@ -26,6 +26,8 @@ const TweetFactory = ({ userObj }) => {
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
+      creatorName: userObj.displayName,
+      creatorImg: userObj.photoURL,
       attachmentUrl: attachmentUrl,
     });
     setTweet('');
@@ -82,6 +84,7 @@ const TweetFactory = ({ userObj }) => {
         <div className="factoryForm__attachment">
           <img
             src={attachment}
+            alt="attachment"
             style={{ backgroundImage: attachment }}
             width="50px"
           />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { dbService, storageService } from 'firebaseConfig';
+import { dbService } from 'firebaseConfig';
 import Tweet from 'components/Tweet';
 import TweetFactory from 'components/TweetFactory';
 
@@ -35,6 +35,7 @@ const Home = ({ userObj }) => {
           <Tweet
             key={tweet.id}
             tweetObj={tweet}
+            userObj={userObj}
             isOwner={userObj.uid === tweet.creatorId}
           />
         ))}

@@ -10,10 +10,12 @@ function App() {
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
+        console.log(user);
         // setUserObj(user); // way 2
         setUserObj({
           displayName: user.displayName,
           uid: user.uid,
+          photoURL: user.photoURL,
           updateProfile: (args) => user.updateProfile(args)
         });
       } else {
@@ -28,6 +30,7 @@ function App() {
     setUserObj({
       displayName: user.displayName,
       uid: user.uid,
+      photoURL: user.photoURL,
       updateProfile: (args) => user.updateProfile(args) 
     });
   };

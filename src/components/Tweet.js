@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
-const Tweet = ({ tweetObj, isOwner }) => {
+const Tweet = ({ tweetObj, userObj, isOwner }) => {
   const [editing, setEditing] = useState(false); // checking editing mode or not
   const [newTweet, setNewTweet] = useState(tweetObj.text); // for updating text
+
   const onDeleteClick = async () => {
     const ok = window.confirm('Are you sure you want to delete this tweet?');
     if (ok) {
@@ -50,8 +51,16 @@ const Tweet = ({ tweetObj, isOwner }) => {
         </>
       ) : (
         <>
+          {!isOwner && (
+            <div className="tweet__userInfo">
+              <img src={tweetObj.creatorImg} className="profileImg" alt="user profile" />
+              <h6 className="userName">{tweetObj.creatorName}</h6>
+            </div>
+          )}
           <h4>{tweetObj.text}</h4>
-          {tweetObj.attachmentUrl && <img src={tweetObj.attachmentUrl} />}
+          {tweetObj.attachmentUrl && (
+            <img src={tweetObj.attachmentUrl} className="tweet__attachment" alt="attachment"/>
+          )}
           {isOwner && (
             <div className="tweet__actions">
               <span onClick={onDeleteClick}>

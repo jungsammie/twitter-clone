@@ -1,3 +1,4 @@
+import Tweet from 'components/Tweet';
 import { authService, dbService } from 'firebaseConfig';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -10,19 +11,20 @@ const Profile = ({ userObj, refreshUser }) => {
     authService.signOut();
     history.push('/');
   };
-  const getMyTweets = async () => {
-    const tweets = await dbService
-      .collection('tweets')
-      .where('creatorId', '==', userObj.uid)
-      .orderBy('createdAt')
-      .get();
-    const tweetArr = tweets.docs.map((doc) => doc.data());
-    setTweets(tweetArr);
-  };
 
   useEffect(() => {
-    getMyTweets();
-  });
+    dbService.collection('tweets').onSnapshot((snapshot) => {
+      const tweetArr = snapshot.docs.filter(
+        (doc) => doc.data().creatorId === userObj.uid,
+      );
+
+      const userTweetArr = tweetArr.map((tweet) => ({
+        id: tweet.id,
+        ...tweet.data(),
+      }));
+      setTweets(userTweetArr);
+    });
+  }, [userObj.uid]);
 
   const onChange = (event) => {
     const {
@@ -56,6 +58,16 @@ const Profile = ({ userObj, refreshUser }) => {
       <span onClick={onLogOutClick} className="formBtn cancelBtn logOut">
         Log out
       </span>
+      <div className="mt-30">
+        {tweets.map((tweet) => (
+          <Tweet
+            key={tweet.id}
+            tweetObj={tweet}
+            userObj={userObj}
+            isOwner={userObj.uid === tweet.creatorId}
+          />
+        ))}
+      </div>
     </div>
   );
 };
